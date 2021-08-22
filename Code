@@ -1,0 +1,20 @@
+local button = plugin:CreateToolbar("Quincy_V2"):CreateButton("RoSync Remover", "Removes RoSync virus.", "rbxassetid://7306561692")
+
+button.Click:Connect(function()
+	game:GetService("ChangeHistoryService"):SetWaypoint("remove RoSync")
+	button:SetActive(false)
+
+	local totalFixed = 0
+	for _, v in ipairs(game:GetDescendants()) do
+		local s, e = pcall(game.IsA, v, "BaseScript")
+		if not (s and e) then continue end
+
+		local occurrences		
+		v.Source, occurrences = string.gsub(v.Source, "%s%-%-%[%[ Last synced.+", "")
+		totalFixed += math.clamp(occurrences, 0, 1)
+	end
+
+	warn("===============================================")
+	warn("Fixed", totalFixed, " RoSync infected scripts")
+	warn("===============================================")
+end)
